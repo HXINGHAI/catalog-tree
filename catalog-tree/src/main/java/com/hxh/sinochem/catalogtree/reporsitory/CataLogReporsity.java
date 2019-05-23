@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: H_xinghai
@@ -52,6 +53,7 @@ public interface CataLogReporsity extends JpaRepository<CatalogTree,Integer> {
      * @return:
      * @Description:删除目录
      */
+    @Modifying
     @Query(nativeQuery = true,value = "delete from catalog_tree where parent_id = ?")
     void deleteCataLogByParentId(Integer pId);
 }
