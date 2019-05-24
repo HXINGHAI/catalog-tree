@@ -1,7 +1,6 @@
 package com.hxh.sinochem.catalogtree.service;
 
 import com.hxh.sinochem.catalogtree.entity.CatalogTree;
-import com.hxh.sinochem.catalogtree.service.ValueObject.AllTree;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface IcataLogService {
      */
     List<CatalogTree> listCataLogByParentId(Integer pId);
 
-    List<AllTree> listCatalogMap(Integer tId);
+    List<CatalogTree> listCatalogMap(Integer tId);
     /**
      * @Author: H_xinghai on 2019/5/22 10:31
      * @param:

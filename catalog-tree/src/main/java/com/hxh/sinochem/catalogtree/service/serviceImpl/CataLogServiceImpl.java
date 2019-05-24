@@ -3,15 +3,12 @@ package com.hxh.sinochem.catalogtree.service.serviceImpl;
 import com.hxh.sinochem.catalogtree.entity.CatalogTree;
 import com.hxh.sinochem.catalogtree.reporsitory.CataLogReporsity;
 import com.hxh.sinochem.catalogtree.service.IcataLogService;
-import com.hxh.sinochem.catalogtree.service.ValueObject.AllTree;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 /**
  * @Author: H_xinghai
@@ -65,23 +62,39 @@ public class CataLogServiceImpl implements IcataLogService {
 //        return result;
 //    }
     //重新构思一下！！！<类中定义列表的形式显示>
-    List<AllTree> resultCatalog = new ArrayList<>();
+//    List<AllTree> resultCatalog = new ArrayList<>();
+//    @Override
+//    public List<AllTree> listCatalogMap(Integer tId) {
+//        List<CatalogTree> listTree = cataLogReporsity.findAllByParentId(tId);
+//
+//        Map<Integer,AllTree> maps = new HashMap<>();
+//        for (CatalogTree catalogTree: listTree) {
+//            if (ifExistSubCataLog(listTree,tId)){
+//                AllTree allTree = new AllTree();
+//                BeanUtils.copyProperties(catalogTree,allTree);  //将catalogTree的属性赋给allTree,allTree中含有子集List
+//
+//                allTree.setSubCollection(resultCatalog);
+//                listCatalogMap(catalogTree.getTierId());
+//            }
+//        }
+//
+//return resultCatalog;
+//    }
+
+
+    /**
+     * @Author: H_xinghai on 2019/5/24 9:14
+     * @param:
+     * @return:
+     * @Description: 一次性加载所有的级别目录
+     */
     @Override
-    public List<AllTree> listCatalogMap(Integer tId) {
-        List<CatalogTree> listTree = cataLogReporsity.findAllByParentId(tId);
-
-        Map<Integer,AllTree> maps = new HashMap<>();
-        for (CatalogTree catalogTree: listTree) {
-            if (ifExistSubCataLog(listTree,tId)){
-                AllTree allTree = new AllTree();
-                BeanUtils.copyProperties(catalogTree,allTree);
-
-                allTree.setSubCollection(resultCatalog);
-                listCatalogMap(catalogTree.getTierId());
-            }
+    public List<CatalogTree> listCatalogMap(Integer tId) {
+        List<CatalogTree> resultList = cataLogReporsity.findAllByParentId(tId);
+        for (CatalogTree catalogTree:resultList) {
+            catalogTree.setSubCollection(listCatalogMap(catalogTree.getTierId()));
         }
-
-return resultCatalog;
+        return resultList;
     }
     /**
      * @Author: H_xinghai on 2019/5/22 10:58

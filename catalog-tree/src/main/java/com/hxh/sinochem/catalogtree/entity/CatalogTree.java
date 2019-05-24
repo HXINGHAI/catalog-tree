@@ -1,9 +1,7 @@
 package com.hxh.sinochem.catalogtree.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author: H_xinghai
@@ -15,8 +13,20 @@ import javax.persistence.Table;
 public class CatalogTree {
     private Integer tierId;
     private String cataLogName;
-    private int parentId;
-    private int level;
+    private Integer parentId;
+    private Integer level;
+    //JPA中的属性的注解最好写在属性的get方法上
+    @Transient
+    private List<CatalogTree> subCollection;
+
+    @Transient
+    public List<CatalogTree> getSubCollection() {
+        return subCollection;
+    }
+
+    public void setSubCollection(List<CatalogTree> subCollection) {
+        this.subCollection = subCollection;
+    }
 
     @Id
     @Column(name = "tier_id")
