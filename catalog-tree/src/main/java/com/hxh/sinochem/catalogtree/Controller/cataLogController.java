@@ -1,6 +1,8 @@
 package com.hxh.sinochem.catalogtree.Controller;
 
 import com.hxh.sinochem.catalogtree.entity.CatalogTree;
+import com.hxh.sinochem.catalogtree.https.enums.ResultEnums;
+import com.hxh.sinochem.catalogtree.https.httpResponse;
 import com.hxh.sinochem.catalogtree.service.IcataLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,30 +23,32 @@ public class cataLogController {
 
     //异步加载（适合层次结构多的情况）
     @GetMapping("/query")
-    public List<CatalogTree> ListCataLog(Integer pId){
+    public httpResponse<List<CatalogTree>> ListCataLog(Integer pId){
         List<CatalogTree>list = icataLogService.listCataLogByParentId(pId);
-        return list;
+        return httpResponse.success(list);
     }
 
     //同步加载（适合级别层次少的情况）
     @PostMapping("/listpage")
-    public List<CatalogTree> ListAllCatalog(@RequestHeader("TID") Integer tId){
-        return icataLogService.listCatalogMap(tId);
+    public httpResponse<List<CatalogTree>> ListAllCatalog(@RequestHeader("TID") Integer tId){
+        List<CatalogTree> list = icataLogService.listCatalogMap(tId);
+        return httpResponse.success(list);
     }
 
     @GetMapping("/delete")
-    public void deleteCataLog( Integer pId){
+    public httpResponse deleteCataLog( Integer pId){
         icataLogService.deleteCataLog(pId);
+        return httpResponse.success();
     }
 
     @GetMapping("/add")
-    public String addCataLog( Integer pId,
-                              Integer tId,
-                              String catalogName){
+    public httpResponse addCataLog( Integer pId,
+                                    Integer tId,
+                                    String catalogName){
         int symbol = icataLogService.addCataLog(catalogName,pId,tId);
         if (symbol == 1){
-            return "add success!";
+            return httpResponse.success();
         }
-        return "add failed!";
+        return httpResponse.error(ResultEnums.PARAMS_ERROR.getCode(),ResultEnums.PARAMS_ERROR.getMsg());
     }
 }
